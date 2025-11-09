@@ -7,5 +7,81 @@
     <title>안녕</title>
 </head>
 <body>
+    <div class="main-image">
+        <!-- 기본 이미지 div -->
+        <div id="login_div">
+            
+            <div id="login_dialog">
+                <p>개발자 게시판으로 로그인</p>
+                <p>관리자에게 발급받은 ID,PASSWORD을 입력해주세요</p>
+                <p class="ID_text">ID</p>
+                <input type="text">
+                <p>PASSWORD</p>
+                <input type="text">
+                
+                <button id="login_btn">로그인</button> 
+
+            </div>
+        </div>
+    </div>
 </body>
+<style>
+    @font-face {
+        font-family: 'OngleipStudyWell';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_StudyHard-Rg.woff2') format('woff2');
+        font-weight: normal;
+        font-display: swap;
+    }
+    body,head{
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: 'OngleipStudyWell';
+    }
+     p{
+        margin: 0;
+        text-align: center;
+        padding: 0;
+    }
+    
+    .main-image{
+        background-image: url('https://github.com/CHOI-JUN-WON/notes/blob/main/20250927_140337.jpg?raw=true');
+        background-size: cover;
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+    }
+    #login_div{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        
+    }
+    #login_dialog{
+        width: 20%;
+        height: 35%;
+        backdrop-filter: blur(3px);
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    input{
+        border-radius: 7px;
+        border: none;
+    }
+    #login_btn{
+        margin-top: 10px;
+        width: 60%;
+        border-radius: 7px;
+        border: none;
+    }
+    .ID_text{
+        
+    }
+</style>
 </html>
