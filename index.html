@@ -9,19 +9,46 @@
 <body>
     <div class="main-image">
         <!-- 기본 이미지 div -->
-        <div id="login_div">
-            
+        <div id="login_div" style="display: none;">
+             <!-- 로그인 페이지 -->
             <div id="login_dialog">
-                <p>개발자 게시판으로 로그인</p>
-                <p>관리자에게 발급받은 ID,PASSWORD을 입력해주세요</p>
-                <p class="ID_text">ID</p>
+                <p style="font-size: 150%;">개발자 게시판으로 로그인</p>
+                <p style="font-size: 110%;">관리자에게 발급받은 ID,PASSWORD을 입력해주세요</p>
+                <p class="ID_PASSWORD_text" id="id_inp">ID</p>
                 <input type="text">
-                <p>PASSWORD</p>
-                <input type="text">
+                <p class="ID_PASSWORD_text">PASSWORD</p>
+                <input type="password" id="password_inp">
                 
                 <button id="login_btn">로그인</button> 
 
             </div>
+        </div>
+        <div id="main_div">
+            <!-- 메인페이지 -->
+                <div class="side_bar">
+                    <p style="font-size: 160%;margin-top: 20%;">백야 게시판 베타</p>
+                    <p class="subject_link">전체보기</p>
+                    <p class="subject_link">공지</p>
+                    <p class="subject_link">개발자 게시판</p>
+                    <p class="subject_link">원화 게시판</p>
+                    <p class="subject_link">기획게시판</p>
+                    <div class="uses_div">
+                        <p id="uses_text">0글자</p>
+                        <p style="border-top: dotted 5px;font-size: 150%;">200000글자</p>
+                    </div>
+                </div>
+                <div id="main_bar">
+                    <div id="explor_div">
+
+                    </div>
+                    <div id="404_notfound">
+                        <img src="" alt="">                        
+                    </div>
+                    <div id="write_bar">
+
+                    </div>
+                </div>
+                
         </div>
     </div>
 </body>
@@ -61,28 +88,71 @@
         
     }
     #login_dialog{
-        width: 20%;
-        height: 35%;
+        width: 30%;
+        height: 45%;
         backdrop-filter: blur(3px);
+        
+        display: flex;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+    }
+    input{
+        border-radius: 7px;
+        border: none;
+        width: 70%;
+        font-size: 150%;
+        text-align: center;
+        font-family: 'OngleipStudyWell';
+    }
+    #login_btn{
+        font-family: 'OngleipStudyWell';
+        margin-top: 10px;
+        width: 70%;
+        font-size: 150%;
+        border-radius: 7px;
+        border: none;
+       background-color: #ADD1FF;
+    }
+    .ID_PASSWORD_text{
+       font-size: 150%; 
+        
+    }
+    #main_div{
+        display: flex;
+        width: 100vw;
+        height: 100vh
+    }
+    .side_bar{
+        height: 100%;
+        width: 20%;
+    }
+    .subject_link{
+        font-size: 150%;
+        margin-top: 20px;
+    }
+    #uses_text{
+        font-size: 150%;
+        margin-bottom: 1px;
+    }
+    .uses_div{
+        width: 40%;
+        height: 10%;
+        border-radius: 10px;
+        margin: 95% 5% 0 auto;
+        border: solid 2px;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
     }
-    input{
-        border-radius: 7px;
-        border: none;
+    #main_bar{
+        width: 80%;
+        height: 100%;
     }
-    #login_btn{
-        font-family: 'OngleipStudyWell';
-        margin-top: 10px;
-        width: 60%;
-        border-radius: 7px;
-        border: none;
-    }
-    .ID_text{
-        
+    #404_notfound{
+
     }
 </style>
 </html>
