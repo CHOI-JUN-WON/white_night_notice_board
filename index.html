@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <title>안녕</title>
 </head>
 <body>
@@ -14,12 +16,12 @@
             <div id="login_dialog">
                 <p style="font-size: 150%;">개발자 게시판으로 로그인</p>
                 <p style="font-size: 110%;">관리자에게 발급받은 ID,PASSWORD을 입력해주세요</p>
-                <p class="ID_PASSWORD_text" id="id_inp">ID</p>
-                <input type="text">
+                <p class="ID_PASSWORD_text" >ID</p>
+                <input type="text" id="id_inp">
                 <p class="ID_PASSWORD_text">PASSWORD</p>
                 <input type="password" id="password_inp">
                 
-                <button id="login_btn">로그인</button> 
+                <button id="login_btn" onclick="login()">로그인</button> 
 
             </div>
         </div>
@@ -27,11 +29,12 @@
             <!-- 메인페이지 -->
                 <div class="side_bar">
                     <p style="font-size: 160%;margin-top: 20%;">백야 게시판 베타</p>
-                    <p class="subject_link">전체보기</p>
+                    <p class="subject_link" onclick="refreshHistory()">전체보기</p>
                     <p class="subject_link">공지</p>
                     <p class="subject_link">개발자 게시판</p>
                     <p class="subject_link">원화 게시판</p>
                     <p class="subject_link">기획게시판</p>
+                    <p class="subject_link" onclick="signOut()">로그아웃</p>
                     <div class="uses_div">
                         <p id="uses_text">0글자</p>
                         <p style="border-top: dotted 5px;font-size: 150%;">200000글자</p>
@@ -39,18 +42,13 @@
                 </div>
                 <div id="main_bar">
                     <div id="explor_div" style="display: none;">
-                        <p id="name_subject">OO게시판</p>
+                        <!-- <p id="name_subject">OO게시판</p> -->
                         <div class="first_row">
                             <p style="font-size: 150%;margin-right: 315px;margin-left: 70px;">제목</p>
                             <p style="font-size: 150%;margin-right: 70px;">작성자</p>
                             <p style="font-size: 150%;margin-right: 50px;">작성시간</p>
                         </div>
-                        <div id="writen_div">
-                            <div class="import"><p style="color: #ff4e59;font-size: 150%;">공지<p></div>
-                            <p style="color: #ff4e59;font-size: 150%;margin-right: 50px;">백야 개발자 게시판에 오신것을 환영합니다!</p>
-                            <p style="font-size: 150%;margin-right: 50px;">최준원</p>
-                            <p style="font-size: 150%;margin-right: 10px;">오후 8시 27분</p>
-                        </div>
+                        <div id="list"></div>
                         
 
                     </div>
@@ -59,16 +57,12 @@
                         <p>요청한 파일을 찾을수없습니다.</p>     
                         <button onclick="history.back();">뒤로가기</button>                 
                     </div>
-                    <div id="write_bar" style="display: none;">
-                        <p id="story_subject_name">OO게시판</p>
+                    <div id="read_bar" style="display: none;">
+                        <!-- <p id="story_subject_name">OO게시판</p> -->
                         <p id="story_subject_title">백야 개발자 게시판에 오신것을 환영합니다!</p>
                         <p id="story_subject_writer"style="border-bottom: solid 1px;">최준원</p>
                         <div id="body" style="overflow: scroll;">
-                            <p id="story_subject_body">"지금 버전은 베타테스트 버전입니다.
-그러므로 완전하지 않습니다.
-그리고 채팅기능은 베타에서 빠졌습니다
-오류는 오류 게시판에 글을 써주시기 바랍니다
-개발자 게시판 관리자 최준원 드림"</p>
+                            <p id="story_subject_body"></p>
                         </div>
                         
 
@@ -99,6 +93,102 @@
         </div>
     </div>
 </body>
+<script>
+    let main_div=document.getElementById('main_div');
+    let login_div=document.getElementById('login_div');
+    let explor_div=document.getElementById('explor_div');
+    let now_subject;
+    let now_story;
+    let notfound=document.getElementById('notfound');
+    let read_bar=document.getElementById('read_bar');
+    let write_story=document.getElementById('write_story');
+    const supabaseUrl = 'https://lkqijqpszrbkhinrfput.supabase.co';//있다고 가정
+    const supabaseKey ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxrcWlqcXBzenJia2hpbnJmcHV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMDgzNjYsImV4cCI6MjA3NzU4NDM2Nn0.fpyA7qRmanz0nN_zjWgDovAlGcN4K2EFsvd6kud4ffU';
+    const client = supabase.createClient(supabaseUrl, supabaseKey);
+    async function login() {
+        let input1=document.getElementById("id_inp");
+        let input2=document.getElementById("password_inp");
+        const email = input1.value;
+        const password = input2.value;
+        console.log("id"+email);
+        console.log("password"+password);
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+
+        if (error) {
+            if( error.message=="Invalid login credentials"){
+                alert("ID 또는 비밀번호를 확인해주세요");
+            }else if(error.message=='User is banned'){
+                alert("사용자가 임시 차단되었습니다.");
+            }
+            console.log(error.message);
+        } else {
+        alert("로그인 성공!");
+        refreshHistory()
+        input1.value="";
+        input2.value="";
+        }
+    }
+    async function checkLogin() {
+       const authInfo = await client.auth.getSession();
+       const session = authInfo.data.session;
+       
+       if (session === null) {
+        main_div.style.display='none';
+        login_div.style.display='flex'
+       } else {
+         
+        refreshHistory()
+       }
+     }
+     checkLogin();
+     async function signOut() {
+       const { error } = await client.auth.signOut();
+       checkLogin();
+     }
+     async function refreshHistory() {
+       let { data: record, error } = await client.from("notice_board_db").select("*");
+       let tag = "";
+       for (let i = 0; i < record.length; i++) {
+        if(record[i].important==true){
+            tag+=`<div id="writen_div"><div class="import"><p style="color: #ff4e59;font-size: 150%;">공지<p></div><p style="color: #ff4e59;font-size: 150%;margin-right: 50px;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;">${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`;
+        }
+         else{tag+=`<div id="writen_div"><p style="color: #ff4e59;font-size: 150%;margin-right: 50px;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;" >${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`;}
+       }
+       document.getElementById('list').innerHTML = tag;
+       main_div.style.display='flex';
+        login_div.style.display='none';
+        main_div.style.display='flex';
+        login_div.style.display='none';
+        notfound.style.display='none';
+        read_bar.style.display='none';
+        explor_div.style.display='flex';
+        write_story.style.display='none';
+     }
+     async function read_data(data) {
+        let story_subject_title=document.getElementById('story_subject_title');
+        let story_subject_writer=document.getElementById('story_subject_writer');
+        let story_subject_body=document.getElementById('story_subject_body');
+         let { data: record, error } = await client.from("notice_board_db").select("*").eq('id', data);
+         if(error){
+            console.log(error);
+         }else{
+            console.log(record);
+           story_subject_body.innerText = record[0].body;
+            story_subject_writer.innerText = record[0].user_edit_name;
+            story_subject_title.innerText = record[0].title;
+
+            main_div.style.display='flex';
+            login_div.style.display='none';
+            notfound.style.display='none';
+            read_bar.style.display='';
+            explor_div.style.display='none';
+            write_story.style.display='none';
+         }
+     }
+     
+
+
+</script>
 <style>
     @font-face {
         font-family: 'OngleipStudyWell';
