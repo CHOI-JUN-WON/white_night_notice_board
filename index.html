@@ -152,7 +152,7 @@
         if(record[i].important==true){
             tag+=`<div id="writen_div"><div class="import"><p style="color: #ff4e59;font-size: 150%;">공지<p></div><p style="color: #ff4e59;font-size: 150%;margin-right: 50px;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;">${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`;
         }
-         else{tag+=`<div id="writen_div"><p style="color: #ff4e59;font-size: 150%;margin-right: 50px;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;" >${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`;}
+         else{tag+=`<div id="writen_div"><p style="font-size: 150%;margin-right: 50px;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;" >${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`;}
        }
        document.getElementById('list').innerHTML = tag;
        main_div.style.display='flex';
