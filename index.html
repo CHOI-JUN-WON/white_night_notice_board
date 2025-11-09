@@ -38,14 +38,21 @@
                     </div>
                 </div>
                 <div id="main_bar">
-                    <div id="explor_div">
-                        <p>OO게시판</p>
+                    <div id="explor_div" style="display: none;">
+                        <p id="name_subject">OO게시판</p>
                         <div class="first_row">
                             <p style="font-size: 150%;margin-right: 315px;margin-left: 70px;">제목</p>
                             <p style="font-size: 150%;margin-right: 70px;">작성자</p>
                             <p style="font-size: 150%;margin-right: 50px;">작성시간</p>
                         </div>
+                        <div id="writen_div">
+                            <div class="import"><p style="color: #ff4e59;font-size: 150%;">공지<p></div>
+                            <p style="color: #ff4e59;font-size: 150%;margin-right: 50px;">백야 개발자 게시판에 오신것을 환영합니다!</p>
+                            <p style="font-size: 150%;margin-right: 50px;">최준원</p>
+                            <p style="font-size: 150%;margin-right: 10px;">오후 8시 27분</p>
+                        </div>
                         
+
                     </div>
                     <div id="notfound" style="display: none;">
                         <img class="notfound_img"src="https://github.com/CHOI-JUN-WON/white_night_notice_board/blob/main/internet_404_page_not_found.png?raw=true" alt="이미지를 찾을수없음"> 
@@ -53,7 +60,17 @@
                         <button onclick="history.back();">뒤로가기</button>                 
                     </div>
                     <div id="write_bar">
+                        <p id="story_subject_name">OO게시판</p>
+                        <p id="story_subject_title">쉬고싶다</p>
+                        <p id="story_subject_writer"style="border-bottom: solid 1px;">최준원</p>
+                        <div id="body" style="overflow: scroll;">
+                            <p id="story_subject_body">"집에가고싶다\n집에가고싶다\n집에가고싶다\n집에가고싶다\n집에가고싶다\n집에가고싶다\n집에가고싶다\n집에가고싶다\n집에가고싶다\n집에가고싶다"</p>
+                        </div>
+                        
 
+                    </div>
+                    <div id="read_story">
+                        
                     </div>
                 </div>
                 
@@ -67,6 +84,7 @@
         font-weight: normal;
         font-display: swap;
     }
+    
     body,head{
         width: 100%;
         height: 100%;
@@ -194,6 +212,39 @@
         border: solid 1px;
         display: flex;
         width: 70%;
+    }
+    #name_subject{
+        font-size: 200%;
+        margin-top: 10px;
+    }
+    #explor_div{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    #body::-webkit-scrollbar {
+        width: 0px; /* 스크롤바의 너비 */
+    }
+    #story_subject_name{
+        color: #03c75a;
+        font-size: 250%;
+        text-align: left;
+        margin-left: 50px;
+    }
+    #story_subject_writer{
+        font-size: 120%;
+        text-align: left;
+        margin-left: 50px;
+    }
+    #story_subject_title{
+        font-size: 220%;
+        text-align: left;
+        margin-left: 50px;
+    }
+    #story_subject_body{
+        font-size: 200%;
+        text-align: left;
+        margin-left: 50px;
     }
 </style>
 </html>
