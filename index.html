@@ -39,10 +39,18 @@
                 </div>
                 <div id="main_bar">
                     <div id="explor_div">
-
+                        <p>OO게시판</p>
+                        <div class="first_row">
+                            <p style="font-size: 150%;margin-right: 315px;margin-left: 70px;">제목</p>
+                            <p style="font-size: 150%;margin-right: 70px;">작성자</p>
+                            <p style="font-size: 150%;margin-right: 50px;">작성시간</p>
+                        </div>
+                        
                     </div>
-                    <div id="404_notfound">
-                        <img src="" alt="">                        
+                    <div id="notfound" style="display: none;">
+                        <img class="notfound_img"src="https://github.com/CHOI-JUN-WON/white_night_notice_board/blob/main/internet_404_page_not_found.png?raw=true" alt="이미지를 찾을수없음"> 
+                        <p>요청한 파일을 찾을수없습니다.</p>     
+                        <button onclick="history.back();">뒤로가기</button>                 
                     </div>
                     <div id="write_bar">
 
@@ -151,8 +159,41 @@
         width: 80%;
         height: 100%;
     }
-    #404_notfound{
-
+    .notfound_img{
+        width: 30%;
+        height: 40%;
+    }
+    #notfound{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-items: center;
+    }
+    .import{
+       
+        margin-left: 10px;
+        margin-right: 10px;
+        background-color: #ffe3e4;
+        border-radius: 5px;
+        width: 5%;
+        height: 1%;
+        text-align: center;
+      }
+      #writen_div{
+        border-radius: 5px;
+         margin-top: 10px;  
+         border: solid 1px;
+        display: flex;
+         width: 70%;
+    }
+    .first_row{
+        border-radius: 5px;
+        margin-top: 10px;  
+        border: solid 1px;
+        display: flex;
+        width: 70%;
     }
 </style>
 </html>
