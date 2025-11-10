@@ -6,11 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <title>베타 출시 - 개발자 게시판</title>
+    <!-- <title>베타 출시 - 개발자 게시판</title> -->
+    <title>긴급 점검중</title>
 </head>
 <body>
     <div class="main-image">
         <!-- 기본 이미지 div -->
+         <p style="width: 100%;height: 100%;text-align: center;display: flex;align-items: center;justify-content: center;font-size: 300%;">사이트 긴급 점검중입니다<br><br>서버이슈로 인해 긴급점검을 하고있습니다.<br>불편을 드려 죄송합니다.</p>
+         
         <div id="login_div" style="display: none;">
              <!-- 로그인 페이지 -->
             <div id="login_dialog">
@@ -27,6 +30,7 @@
         </div>
         <div id="main_div">
             <!-- 메인페이지 -->
+             
                 <div class="side_bar">
                     <p style="font-size: 160%;margin-top: 20%;">백야 게시판 베타</p>
                     <p class="subject_link" onclick="refreshHistory()">전체보기</p>
@@ -102,6 +106,12 @@
     let notfound=document.getElementById('notfound');
     let read_bar=document.getElementById('read_bar');
     let write_story=document.getElementById('write_story');
+
+    //점검
+    main_div.style.display='none';
+    login_div.style.display='none';
+    
+    /*
     const supabaseUrl = 'https://lkqijqpszrbkhinrfput.supabase.co';//있다고 가정
     const supabaseKey ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxrcWlqcXBzenJia2hpbnJmcHV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMDgzNjYsImV4cCI6MjA3NzU4NDM2Nn0.fpyA7qRmanz0nN_zjWgDovAlGcN4K2EFsvd6kud4ffU';
     const client = supabase.createClient(supabaseUrl, supabaseKey);
@@ -185,7 +195,7 @@
             write_story.style.display='none';
          }
      }
-     
+     */
 
 
 </script>
