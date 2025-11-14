@@ -160,9 +160,9 @@
        let tag = "";
        for (let i = 0; i < record.length; i++) {
         if(record[i].important==true){
-            tag+=`<div id="writen_div"><div class="import"><p style="color: #ff4e59;font-size: 150%;">공지<p></div><p style="color: #ff4e59;font-size: 150%;margin-right: 50px;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;">${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`;
+            tag=`<div id="writen_div"><div class="import"><p style="color: #ff4e59;font-size: 150%;">공지<p></div><p style="color: #ff4e59;width:37%;font-size: 150%;margin-right: 50px;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;">${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`+tag;
         }
-         else{tag+=`<div id="writen_div"><p style="font-size: 150%;margin-right: 50px;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;" >${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`;}
+         else{tag+=`<div id="writen_div"><p style="font-size: 150%;margin-right: 50px;width:45%;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;" >${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`;}
        }
        document.getElementById('list').innerHTML = tag;
        main_div.style.display='flex';
@@ -200,6 +200,10 @@
 
 </script>
 <style>
+    #list{
+        width: 70%;
+        
+    }
     @font-face {
         font-family: 'OngleipStudyWell';
         src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2411-3@1.0/Ownglyph_StudyHard-Rg.woff2') format('woff2');
@@ -236,6 +240,7 @@
         
     }
     #login_dialog{
+        /* box-shadow: seashell 10px; */
         width: 30%;
         height: 45%;
         backdrop-filter: blur(3px);
@@ -335,7 +340,7 @@
          margin-top: 10px;  
          border: solid 1px;
         display: flex;
-         width: 70%;
+         width: 100%;
     }
     .first_row{
         border-radius: 5px;
