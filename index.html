@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- <title>베타 출시 - 개발자 게시판</title> -->
-    <title>긴급 점검중</title>
+    <title>개발자 게시판</title>
+    <!-- <title>긴급 점검중</title> -->
 </head>
 <body>
     <div class="main-image">
         <!-- 기본 이미지 div -->
-         <p style="width: 100%;height: 100%;text-align: center;display: flex;align-items: center;justify-content: center;font-size: 300%;">사이트 긴급 점검중입니다<br><br>서버이슈로 인해 긴급점검을 하고있습니다.<br>불편을 드려 죄송합니다.</p>
+         <!-- <p style="width: 100%;height: 100%;text-align: center;display: flex;align-items: center;justify-content: center;font-size: 300%;">사이트 긴급 점검중입니다<br><br>서버이슈로 인해 긴급점검을 하고있습니다.<br>불편을 드려 죄송합니다.</p> -->
          
         <div id="login_div" style="display: none;">
              <!-- 로그인 페이지 -->
@@ -32,8 +32,9 @@
             <!-- 메인페이지 -->
              
                 <div class="side_bar">
-                    <p style="font-size: 160%;margin-top: 20%;">백야 게시판 베타</p>
-                    <p class="subject_link" onclick="refreshHistory()">전체보기</p>
+                    
+                    <p style="font-size: 160%;margin-top: 20%;">백야 게시판</p>
+                    <p class="subject_link" onclick="refreshHistory();">전체보기</p>
                     <p class="subject_link">공지</p>
                     <p class="subject_link">개발자 게시판</p>
                     <p class="subject_link">원화 게시판</p>
@@ -46,10 +47,11 @@
                 </div>
                 <div id="main_bar">
                     <div id="explor_div" style="display: none;">
-                        <!-- <p id="name_subject">OO게시판</p> -->
+                        <div style="width: 100%;text-align: left;font-size: 150%;display: none;">펼쳐보기</div>
+                        <p id="name_subject" style="text-align: center;" >게시판</p>
                         <div class="first_row">
-                            <p style="font-size: 150%;margin-right: 315px;margin-left: 70px;">제목</p>
-                            <p style="font-size: 150%;margin-right: 70px;">작성자</p>
+                            <p style="font-size: 150%;margin-right: 200px;margin-left: 220px;">제목</p>
+                            <p style="font-size: 150%;margin-right: 80px;">작성자</p>
                             <p style="font-size: 150%;margin-right: 50px;">작성시간</p>
                         </div>
                         <div id="list"></div>
@@ -106,15 +108,33 @@
     let notfound=document.getElementById('notfound');
     let read_bar=document.getElementById('read_bar');
     let write_story=document.getElementById('write_story');
-
-    //점검
-    main_div.style.display='none';
-    login_div.style.display='none';
     
-    /*
-    const supabaseUrl = 'https://lkqijqpszrbkhinrfput.supabase.co';//있다고 가정
+
+    const supabaseUrl = 'https://lkqijqpszrbkhinrfput.supabase.co';
     const supabaseKey ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxrcWlqcXBzenJia2hpbnJmcHV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMDgzNjYsImV4cCI6MjA3NzU4NDM2Nn0.fpyA7qRmanz0nN_zjWgDovAlGcN4K2EFsvd6kud4ffU';
     const client = supabase.createClient(supabaseUrl, supabaseKey);
+    function load_data(){
+        if(localStorage.getItem("setting")==null){
+            // 설정값이 없을때
+            localStorage.setItem("setting","1");
+            const dbReq = indexedDB.open("story", 1);
+            dbReq.onupgradeneeded = (event) => {
+                // console.log('onupgradeneeded');
+                let testDb = event.target.result;
+                testDb.createObjectStore("story", {keyPath: "id",autoIncrement: true});
+                new_story();
+                // debugger
+            }
+        }else{
+            const dbReq = indexedDB.open("story", 1);
+            dbReq.onsuccess = (event) => {
+                let testDb = event.target.result;
+                refreshHistory();
+                // debugger
+            }
+        }
+        
+    }
     async function login() {
         let input1=document.getElementById("id_inp");
         let input2=document.getElementById("password_inp");
@@ -133,7 +153,8 @@
             console.log(error.message);
         } else {
         alert("로그인 성공!");
-        refreshHistory()
+        load_data();
+        // refreshHistory()
         input1.value="";
         input2.value="";
         }
@@ -146,8 +167,9 @@
         main_div.style.display='none';
         login_div.style.display='flex'
        } else {
-         
-        refreshHistory()
+        
+        load_data();
+        // refreshHistory()
        }
      }
      checkLogin();
@@ -155,24 +177,113 @@
        const { error } = await client.auth.signOut();
        checkLogin();
      }
-     async function refreshHistory() {
-       let { data: record, error } = await client.from("notice_board_db").select("*");
+     async function new_story() {
+        console.log("새로운 스토리 동기화 시작");
+        let { data: record, error } = await client.from("notice_board_db").select("*");
+        try {
+            const dbReq = indexedDB.open("story", 1);
+            dbReq.onsuccess = (event) => {
+                let testDb = event.target.result;
+                let store = testDb.transaction("story", "readwrite").objectStore("story");
+                for (let i = 0; i < record.length; i++) {
+                    let item = record[i];
+                    let addReq = store.add({
+                        id: item.id,
+                        title: item.title,
+                        body: item.body,
+                        edit_name: item.user_edit_name,
+                        modifed_at: item.modifed_at,
+                        important:item.important
+                    });
+                    
+                    addReq.onsuccess = (Event) => {
+                        console.log("IndexedDB 저장 성공:", item.id);
+                    };
+                }
+                
+            }
+            localStorage.setItem("last_date", record[record.length - 1].modifed_at);
+            // 트랜잭션이 완료될 때까지 기다립니다.
+            
+            
+        } catch (e) {
+            console.error("데이터 저장 중 오류 발생:", e);
+        }
+    }
+    
+    async function refreshHistory() {
+        console.log("?");
+        let tag = "";
+        console.log("새로운 스토리 동기화 시작");
+        let timestampString=localStorage.getItem("last_date");
+        let { data: record, error } = await client.from("notice_board_db").select("*").gte('modifed_at', timestampString);
+            try {
+            
+                console.log(record);
+            const dbReq = indexedDB.open("story", 1);
+            dbReq.onsuccess = (event) => {
+                let testDb = event.target.result;
+                let store = testDb.transaction("story", "readwrite").objectStore("story");
+                for (let i = 1; i < record.length; i++) {
+                    let item = record[i];
+                    let addReq = store.add({
+                        id: item.id,
+                        title: item.title,
+                        body: item.body,
+                        edit_name: item.user_edit_name,
+                        modifed_at: item.modifed_at,
+                        important:item.important
+                    });
+                    
+                    addReq.onsuccess = (Event) => {
+                        console.log("IndexedDB 저장 성공:", item.id);
+                    };
+                }
+                
+                const getAllRequest = store.getAll();
+                getAllRequest.onsuccess = function(event) {
+                    // 모든 데이터가 results 배열에 담겨 반환됩니다.
+                    const allData = event.target.result;
+                    for(let i=0;i<allData.length;i++){
+                        if(allData[i].important==true){
+                            tag=`<div id="writen_div"><div class="import"><p style="color: #ff4e59;font-size: 150%;">공지<p></div><p style="color: #ff4e59;width:37%;font-size: 150%;margin-right: 50px;"onclick="read_data(${allData[i].id});">${allData[i].title}</p><p style="font-size: 150%;margin-right: 50px;">${allData[i].edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${allData[i].modifed_at}</p></div>`+tag;
+                        }
+                        else{tag+=`<div id="writen_div"><p style="font-size: 150%;margin-right: 50px;width:45%;"onclick="read_data(${allData[i].id});">${allData[i].title}</p><p style="font-size: 150%;margin-right: 50px;" >${allData[i].edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${allData[i].modifed_at}</p></div>`;}
+                    }
+                     document.getElementById('list').innerHTML = tag;
+                };
+                
+                main_div.style.display='flex';
+                login_div.style.display='none';
+                main_div.style.display='flex';
+                login_div.style.display='none';
+                notfound.style.display='none';
+                read_bar.style.display='none';
+                explor_div.style.display='flex';
+                write_story.style.display='none';
+                   
+            }
+            
+
+            localStorage.setItem("last_date", record[record.length - 1].modifed_at);
+            // 트랜잭션이 완료될 때까지 기다립니다.
+            
+            
+        } catch (e) {
+            console.error("데이터 저장 중 오류 발생:", e);
+        }
+    }
+     async function refreshHistorys() {
+        const { data, error } = await supabase
+    .from('your_table_name')
+  .select('*')
+   // 또는 specificTime 변수 사용
+      
        let tag = "";
        for (let i = 0; i < record.length; i++) {
-        if(record[i].important==true){
-            tag=`<div id="writen_div"><div class="import"><p style="color: #ff4e59;font-size: 150%;">공지<p></div><p style="color: #ff4e59;width:37%;font-size: 150%;margin-right: 50px;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;">${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`+tag;
-        }
-         else{tag+=`<div id="writen_div"><p style="font-size: 150%;margin-right: 50px;width:45%;"onclick="read_data(${record[i].id});">${record[i].title}</p><p style="font-size: 150%;margin-right: 50px;" >${record[i].user_edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${record[i].modifed_at}</p></div>`;}
+
        }
-       document.getElementById('list').innerHTML = tag;
-       main_div.style.display='flex';
-        login_div.style.display='none';
-        main_div.style.display='flex';
-        login_div.style.display='none';
-        notfound.style.display='none';
-        read_bar.style.display='none';
-        explor_div.style.display='flex';
-        write_story.style.display='none';
+      
      }
      async function read_data(data) {
         let story_subject_title=document.getElementById('story_subject_title');
@@ -195,7 +306,7 @@
             write_story.style.display='none';
          }
      }
-     */
+     
 
 
 </script>
