@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <title>개발자 게시판1</title>
+    <title>개발자 게시판</title>
     <!-- <title>긴급 점검중</title> -->
 </head>
 <body>
@@ -21,7 +21,7 @@
                 <p style="font-size: 110%;">관리자에게 발급받은 ID,PASSWORD을 입력해주세요</p>
                 <p class="ID_PASSWORD_text" >ID</p>
                 <input type="text" id="id_inp">
-                <p class="ID_PASSWORD_text">PASSWORD</p>
+                <p class="ID_PASSWOfRD_text">PASSWORD</p>
                 <input type="password" id="password_inp">
                 
                 <button id="login_btn" onclick="login()">로그인</button> 
@@ -216,7 +216,7 @@
         let tag = "";
         console.log("새로운 스토리 동기화 시작");
         let timestampString=localStorage.getItem("last_date");
-        let { data: record, error } = await client.from("notice_board_db").select("*").gte('modifed_at', timestampString);
+        let { data: record, error } = await client.from("notice_board_db").select("*").gt('modifed_at', timestampString);
             try {
             
                 console.log(record);
