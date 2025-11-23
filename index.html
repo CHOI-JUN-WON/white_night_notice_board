@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+    <script src="https://choi-jun-won.github.io/typing_animation/typingaanimation.js"></script>
     <title>개발자 게시판</title>
     <!-- <title>긴급 점검중</title> -->
 </head>
@@ -35,15 +35,9 @@
                     
                     <p style="font-size: 160%;margin-top: 20%;">백야 게시판</p>
                     <p class="subject_link" onclick="refreshHistory();">전체보기</p>
-                    <p class="subject_link">공지</p>
-                    <p class="subject_link">개발자 게시판</p>
-                    <p class="subject_link">원화 게시판</p>
-                    <p class="subject_link">기획게시판</p>
+                    <p class="subject_link" onclick="write_storys_show()">새로 쓰기</p>
                     <p class="subject_link" onclick="signOut()">로그아웃</p>
-                    <div class="uses_div">
-                        <p id="uses_text">0글자</p>
-                        <p style="border-top: dotted 5px;font-size: 150%;">200000글자</p>
-                    </div>
+                    
                 </div>
                 <div id="main_bar">
                     <div id="explor_div" style="display: none;">
@@ -67,8 +61,23 @@
                         <!-- <p id="story_subject_name">OO게시판</p> -->
                         <p id="story_subject_title">백야 개발자 게시판에 오신것을 환영합니다!</p>
                         <p id="story_subject_writer"style="border-bottom: solid 1px;">최준원</p>
-                        <div id="body" style="overflow: scroll;">
+                        <div id="body" style="overflow: auto;">
                             <p id="story_subject_body"></p>
+                        </div>
+                        <div>
+                            <div id="write_comment">
+                                <p style="font-size: 150%;">댓글추가</p>
+                                <!-- TODO : 네이버 댓글 디자인으로 -->
+
+                                <div class="comment-wrapper" style="display: flex;align-items: center;justify-content: center;width: 100%;">
+                                    <div id="comment_input" contenteditable="true" placeholder="댓글을 입력하세요" style="width: 50%;font-size:150%;margin-top:0;"></div>
+                                    <button id="write_btn" class="comment-btn" style="margin-top: 0;"onclick='write_comment()'>추가</button>
+                                </div>
+
+                                
+                            </div>
+                            <div id="list_comment">
+                            </div>
                         </div>
                         
 
@@ -76,19 +85,20 @@
                     
                     <div id="write_story">
                         <p class="write_text">작성</p>
-                        <div id="body_input" contenteditable="true" style="border: solid 1px; width: 80%; height: 50%; margin-top: 10px;font-size: 220%;" data-placeholder="여기에 제목을 입력하세요"></div>
+                        <div id="title_input" contenteditable="true" style="border: solid 1px; width: 80%; height: 50%; margin-top: 10px;font-size: 220%;" data-placeholder="여기에 제목을 입력하세요"></div>
                         <div id="body_input" contenteditable="true" style="border: solid 1px; width: 80%; height: 300px; margin-top: 10px;font-size: 200%;"data-placeholder="여기에 제목을 입력하세요"></div>
                         <div id="bar">
-                        <label for="category" style="font-size: 120%;">게시판 선택:</label>
-                        <select id="category" name="category" style="font-family: 'OngleipStudyWell'; font-size:120%; border-radius: 5px;background-color: #ffffff00;">
+                        <!-- <label for="category" style="font-size: 120%;">게시판 선택:</label> -->
+                        <!-- <select id="category" name="category" style="font-family: 'OngleipStudyWell'; font-size:120%; border-radius: 5px;background-color: #ffffff00;">
                             <option value="">-- 게시판을 선택하세요 --</option>
                             <option value="notice">공지</option>
                             <option value="developer">개발자 게시판</option>
                             <option value="drawing">원화 게시판</option>
                             <option value="plan">기획 게시판</option>
-                        </select>
-
-                        <button id="write_btn" style="margin-top: 10px;">작성완료</button>
+                        </select> -->
+                        <input type="checkbox" id="notice_check">
+                        <label for="notice_check" style="font-size: 150%;">공지</label>
+                        <button id="write_btn" onclick="write_storys()">작성완료</button>
                         </div>
                         
                     </div>
@@ -100,6 +110,7 @@
     </div>
 </body>
 <script>
+    let now_cnt=0;
     let main_div=document.getElementById('main_div');
     let login_div=document.getElementById('login_div');
     let explor_div=document.getElementById('explor_div');
@@ -108,6 +119,10 @@
     let notfound=document.getElementById('notfound');
     let read_bar=document.getElementById('read_bar');
     let write_story=document.getElementById('write_story');
+    let title_input=document.getElementById('title_input');
+    let body_input=document.getElementById('body_input');
+    let notice_check=document.getElementById('notice_check');
+    let comment_input=document.getElementById('comment_input');
     
 
     const supabaseUrl = 'https://lkqijqpszrbkhinrfput.supabase.co';
@@ -135,6 +150,46 @@
         }
         
     }
+    function write_storys_show(){
+        main_div.style.display='flex';
+        login_div.style.display='none';
+        main_div.style.display='flex';
+        login_div.style.display='none';
+        notfound.style.display='none';
+        read_bar.style.display='none';
+        explor_div.style.display='none';
+        write_story.style.display='flex';
+
+    }
+    async function write_storys() {
+        const { data, error } = await client
+            .from("notice_board_db")
+            .insert([{ title: title_input.innerText, body: body_input.innerText, subject: 1, important: notice_check.checked, user_edit_name: '테스트' }]);
+
+        if (error) {
+            console.error("Supabase 삽입 오류:", error.message); // 콘솔에 오류 출력
+            alert("데이터 저장 중 오류가 발생했습니다: " + error.message); // 사용자에게 알림
+            return; // 오류 발생 시 함수 종료
+        }
+
+        console.log("데이터 성공적으로 삽입됨:", data);
+        refreshHistory();
+    }
+    async function write_comment() {
+        const { data, error } = await client
+            .from("chat")
+            .insert([{dependent_row:now_cnt,user_name:"테스트",user_said:comment_input.innerText}]);
+
+        if (error) {
+            console.error("Supabase 삽입 오류:", error.message); // 콘솔에 오류 출력
+            alert("데이터 저장 중 오류가 발생했습니다: " + error.message); // 사용자에게 알림
+            return; // 오류 발생 시 함수 종료
+        }
+
+        console.log("데이터 성공적으로 삽입됨:", data);
+        refreshHistory();
+    }
+
     async function login() {
         let input1=document.getElementById("id_inp");
         let input2=document.getElementById("password_inp");
@@ -216,7 +271,7 @@
         let tag = "";
         console.log("새로운 스토리 동기화 시작");
         let timestampString=localStorage.getItem("last_date");
-        let { data: record, error } = await client.from("notice_board_db").select("*").gt('modifed_at', timestampString);
+        let { data: record, error } = await client.from("notice_board_db").select("*").gte('modifed_at', timestampString);
             try {
             
                 console.log(record);
@@ -224,9 +279,9 @@
             dbReq.onsuccess = (event) => {
                 let testDb = event.target.result;
                 let store = testDb.transaction("story", "readwrite").objectStore("story");
-                for (let i = 1; i < record.length; i++) {
+                for (let i = 0; i < record.length; i++) {
                     let item = record[i];
-                    let addReq = store.add({
+                    let addReq = store.put({
                         id: item.id,
                         title: item.title,
                         body: item.body,
@@ -263,8 +318,6 @@
                 write_story.style.display='none';
                    
             }
-            
-
             localStorage.setItem("last_date", record[record.length - 1].modifed_at);
             // 트랜잭션이 완료될 때까지 기다립니다.
             
@@ -273,39 +326,58 @@
             console.error("데이터 저장 중 오류 발생:", e);
         }
     }
-     async function refreshHistorys() {
-        const { data, error } = await supabase
-    .from('your_table_name')
-  .select('*')
-   // 또는 specificTime 변수 사용
-      
-       let tag = "";
-       for (let i = 0; i < record.length; i++) {
-
-       }
-      
-     }
-     async function read_data(data) {
+     
+     async function read_data(datas) {
+        read_commets(datas);
         let story_subject_title=document.getElementById('story_subject_title');
         let story_subject_writer=document.getElementById('story_subject_writer');
         let story_subject_body=document.getElementById('story_subject_body');
-         let { data: record, error } = await client.from("notice_board_db").select("*").eq('id', data);
+        const dbReq = indexedDB.open("story", 1);
+         now_cnt=datas;
+            dbReq.onsuccess = (event) => {
+            let testDb = event.target.result;
+            let store = testDb.transaction("story", "readwrite").objectStore("story");
+            const request = store.get(datas);
+            request.onsuccess=function(event){
+            const record= event.target.result;
+            if (record) {
+                story_subject_body.innerText = record.body;
+                story_subject_writer.innerText = record.edit_name;
+                story_subject_title.innerText = record.title;
+
+                main_div.style.display='flex';
+                login_div.style.display='none';
+                notfound.style.display='none';
+                read_bar.style.display='';
+                explor_div.style.display='none';
+                write_story.style.display='none';
+            } else {
+                console.log('해당 키로 찾은 데이터가 없습니다.');
+            }
+        }
+            }
+         
+        
+        
+     }
+     async function read_commets(dataes) {
+        let list_comment=document.getElementById('list_comment');
+        let now_texts='';
+         let { data: record, error } = await client.from("chat").select("*").eq('dependent_row', dataes);
          if(error){
             console.log(error);
          }else{
-            console.log(record);
-           story_subject_body.innerText = record[0].body;
-            story_subject_writer.innerText = record[0].user_edit_name;
-            story_subject_title.innerText = record[0].title;
-
-            main_div.style.display='flex';
-            login_div.style.display='none';
-            notfound.style.display='none';
-            read_bar.style.display='';
-            explor_div.style.display='none';
-            write_story.style.display='none';
+             for (let i = 0; i < record.length; i++) {
+                now_texts+=`<p style="font-size: 150%;">${record[i].user_name}:${record[i].user_said}</p>`;
+             }
+             list_comment.innerHTML=now_texts;
+             console.log(now_texts);
          }
+        
      }
+     password_inp.addEventListener("keydown", e => {
+        if (e.key === "Enter") login();
+    });
      
 
 
@@ -314,6 +386,9 @@
     #list{
         width: 70%;
         
+    }
+    #notice_check{
+        width: 1%;
     }
     @font-face {
         font-family: 'OngleipStudyWell';
