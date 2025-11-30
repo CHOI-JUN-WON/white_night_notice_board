@@ -195,8 +195,8 @@
     async function login() {
         let input1=document.getElementById("id_inp");
         let input2=document.getElementById("password_inp");
-        const email = input1.value;
-        const password = input2.value;
+        let email = input1.value;
+        let password = input2.value;
         let is_at=false;
         for(let i=0;i<email.length;i++){
             if(email[i]=="@"){
