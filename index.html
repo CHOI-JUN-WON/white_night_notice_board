@@ -2,17 +2,10 @@
 <html lang="ko">
 <head>
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-MJLSM4QT');</script>
-    <!-- End Google Tag Manager -->
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://choi-jun-won.github.io/typing_animation/typingaanimation.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>개발자 게시판</title>
     <!-- <title>긴급 점검중</title> -->
 </head>
@@ -69,13 +62,10 @@
                         <!-- <p id="story_subject_name">OO게시판</p> -->
                         <p id="story_subject_title">백야 개발자 게시판에 오신것을 환영합니다!</p>
                         <p id="story_subject_writer"style="border-bottom: solid 1px;">최준원</p>
-                        <div id="body" style="overflow: auto;">
-                            <p id="story_subject_body"></p>
-                        </div>
+                        <p id="story_subject_body"></p>
                         <div>
                             <div id="write_comment">
                                 <p style="font-size: 150%;">댓글추가</p>
-                                <!-- TODO : 네이버 댓글 디자인으로 -->
 
                                 <div class="comment-wrapper" style="display: flex;align-items: center;justify-content: center;width: 100%;">
                                     <div id="comment_input" contenteditable="true" placeholder="댓글을 입력하세요" style="width: 50%;font-size:150%;margin-top:0;"></div>
@@ -134,7 +124,7 @@
     
 
     const supabaseUrl = 'https://lkqijqpszrbkhinrfput.supabase.co';
-    const supabaseKey ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxrcWlqcXBzenJia2hpbnJmcHV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMDgzNjYsImV4cCI6MjA3NzU4NDM2Nn0.fpyA7qRmanz0nN_zjWgDovAlGcN4K2EFsvd6kud4ffU';
+   const supabaseKey ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxrcWlqcXBzenJia2hpbnJmcHV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIwMDgzNjYsImV4cCI6MjA3NzU4NDM2Nn0.fpyA7qRmanz0nN_zjWgDovAlGcN4K2EFsvd6kud4ffU';
     const client = supabase.createClient(supabaseUrl, supabaseKey);
     function load_data(){
         if(localStorage.getItem("setting")==null){
@@ -203,10 +193,12 @@
         let input2=document.getElementById("password_inp");
         const email = input1.value;
         const password = input2.value;
+        // const email = 'temp_user@whitenightcalkbord.com';
+        // const password = 'tempuser1234';
         console.log("id"+email);
         console.log("password"+password);
         const { data, error } = await client.auth.signInWithPassword({ email, password });
-
+        // const { data, error } = await client.auth.signInWithPassword({ email,password});
         if (error) {
             if( error.message=="Invalid login credentials"){
                 alert("ID 또는 비밀번호를 확인해주세요");
@@ -309,11 +301,12 @@
                     const allData = event.target.result;
                     for(let i=0;i<allData.length;i++){
                         if(allData[i].important==true){
-                            tag=`<div id="writen_div"><div class="import"><p style="color: #ff4e59;font-size: 150%;">공지<p></div><p style="color: #ff4e59;width:37%;font-size: 150%;margin-right: 50px;"onclick="read_data(${allData[i].id});">${allData[i].title}</p><p style="font-size: 150%;margin-right: 50px;">${allData[i].edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${allData[i].modifed_at}</p></div>`+tag;
+                            tag=`<div id="writen_div"><div class="import"><p class="div_p">공지<p></div><p class="list_title"onclick="read_data(${allData[i].id});">${allData[i].title}</p><p style="font-size: 150%;margin-right: 50px;"class="list_name">${allData[i].edit_name}</p><p style="font-size: 150%;margin-right: 10px;"class="list_modifed">${allData[i].modifed_at}</p></div>`+tag;
                         }
-                        else{tag+=`<div id="writen_div"><p style="font-size: 150%;margin-right: 50px;width:45%;"onclick="read_data(${allData[i].id});">${allData[i].title}</p><p style="font-size: 150%;margin-right: 50px;" >${allData[i].edit_name}</p><p style="font-size: 150%;margin-right: 10px;">${allData[i].modifed_at}</p></div>`;}
+                        else{tag+=`<div id="writen_div"><p class="list_title"style="color:black;"onclick="read_data(${allData[i].id});">${allData[i].title}</p><p style="font-size: 150%;margin-right: 50px;"class="list_name">${allData[i].edit_name}</p><p style="font-size: 150%;margin-right: 10px;"class="list_modifed">${allData[i].modifed_at}</p></div>`;}
                     }
                      document.getElementById('list').innerHTML = tag;
+
                 };
                 
                 main_div.style.display='flex';
@@ -391,9 +384,27 @@
 
 </script>
 <style>
+    #list_comment{
+        padding-bottom: 50px;
+    }
+
     #list{
         width: 70%;
-        
+        height: 80vh;
+        padding-right: 15px;
+        /* padding-bottom: 15px; */
+        overflow-y: auto;        
+    }
+    #list::-webkit-scrollbar{
+        width: 0px;
+    }
+    #read_bar{
+        height: 100vh;
+        width: 100%;
+        overflow-y: auto;
+    }
+    #read_bar::-webkit-scrollbar{
+        width: 0;
     }
     #notice_check{
         width: 1%;
@@ -541,6 +552,8 @@
          width: 100%;
     }
     .first_row{
+        margin-right: 13px;
+        /* padding-right: 15px; */
         border-radius: 5px;
         margin-top: 10px;  
         border: solid 1px;
@@ -556,9 +569,8 @@
         align-items: center;
         flex-direction: column;
     }
-    #body::-webkit-scrollbar {
-        width: 0px; /* 스크롤바의 너비 */
-    }
+
+
     #story_subject_name{
         color: #03c75a;
         font-size: 250%;
@@ -594,6 +606,88 @@
         flex-direction: row;
         width: 80%;
     }
+    .list_title{
+        color: #ff4e59;
+        width:37%;
+        font-size: 150%;
+        margin-right: 50px;
+    }
+    .list_name{
+        font-size: 150%;
+        margin-right: 50px;
+     }
+     .div_p{
+        color: #ff4e59;
+        font-size: 150%;
+     }
+    .import {
+        margin: 0;
+        width: 5%;
+        
+      }
+     @media screen and (max-width: 768px) {
+        #list{
+            /* width: 70%; */
+            /* height: 80vh; */
+            padding-right: 15px;
+            /* padding-bottom: 15px; */
+            /* overflow-y: auto;         */
+        }
+         #login_dialog{
+            /* box-shadow: seashell 10px; */
+            width: 90%;
+            height: 45%;
+            backdrop-filter: blur(3px);
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff5a;
+            border-radius: 20px;
+        }
+        #write_btn{
+            font-family: 'OngleipStudyWell';
+            margin-top: 10px;
+            width: 30%;
+            margin-left:10px;
+            font-size: 150%;
+            border-radius: 7px;
+            border: none;
+            background-color: #ADD1FF;
+        }
+        #writen_div{
+        border-radius: 5px;
+         margin-top: 10px;  
+         border: solid 1px;
+        display: flex;
+        flex-direction: column;
+         width: 100%;
+        }
+        .first_row{
+            display: none;
+            align-items: center;
+            align-content: center;
+        }
+        .list_name{
+            width: 100%;
+             margin: 0;
+        }
+        .list_modifed{
+            width: 100%;
+            margin: 0;
+        }
+        .list_title{
+            margin: 0;
+            width: 100%;
+        }
+         .import {
+        margin: 0;
+        width: 100%;
+        
+      }
+     }
+     
     
 </style>
 </html>
