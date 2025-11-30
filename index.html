@@ -197,6 +197,7 @@
         let input2=document.getElementById("password_inp");
         const email = input1.value;
         const password = input2.value;
+        let is_at=false;
         for(let i=0;i<email.length;i++){
             if(email[i]=="@"){
                 is_at=true;
@@ -208,7 +209,7 @@
         }
         console.log("id"+email);
         console.log("password"+password);
-        let is_at=false;
+        
         
         const { data, error } = await client.auth.signInWithPassword({ email, password });
         // const { data, error } = await client.auth.signInWithPassword({ email,password});
